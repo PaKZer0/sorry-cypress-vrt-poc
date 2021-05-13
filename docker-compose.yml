@@ -1,0 +1,190 @@
+version: "2.1"
+services:
+
+## VRT containers
+
+  ui:
+    image: visualregressiontracker/ui:4.12.0
+    ports:
+      - "${VRT_PORT}:8080"
+    environment:
+      REACT_APP_API_URL: ${REACT_APP_API_URL}
+    networks:
+      - vrtnet
+
+  vrtapi:
+    image: visualregressiontracker/api:4.12.0
+    environment:
+      DATABASE_URL: postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB}
+      JWT_SECRET: ${JWT_SECRET}
+      JWT_LIFE_TIME: ${JWT_LIFE_TIME}
+      APP_FRONTEND_URL: ${APP_FRONTEND_URL}
+      BODY_PARSER_JSON_LIMIT: ${BODY_PARSER_JSON_LIMIT}
+      AUTO_APPROVE_BASED_ON_HISTORY: ${AUTO_APPROVE_BASED_ON_HISTORY}
+    ports:
+      - "${APP_PORT}:3000"
+    volumes:
+      - ./imageUploads:/imageUploads
+    depends_on:
+      - postgres
+    networks:
+      - vrtnet
+
+  migration:
+    image: visualregressiontracker/migration:4.12.0
+    environment:
+      DATABASE_URL: postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB}
+    depends_on:
+      postgres:
+        condition: service_healthy
+    restart: on-failure
+    networks:
+      - vrtnet
+
+  postgres:
+    image: postgres:12
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+    ports:
+      - "${POSTGRES_PORT}:5432"
+    expose:
+      - "${POSTGRES_PORT}"
+    volumes:
+      - ./db:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -d $$POSTGRES_DB -U $$POSTGRES_USER"]
+      interval: 10s
+      timeout: 120s
+      retries: 10
+    networks:
+      - vrtnet
+
+## sorry cypress containers
+
+  mongo:
+    image: mongo:4.2
+    volumes:
+      - ./data/data-mongo-cypress:/data/db
+    networks:
+      - sorrynet
+
+  redis:
+    image: redis:alpine
+    networks:
+      - sorrynet
+
+  director:
+    image: agoldis/sorry-cypress-director:latest
+    environment:
+      DASHBOARD_URL: http://${SERVER_IP}:${FRONT_PORT}
+      EXECUTION_DRIVER: '../execution/mongo/driver'
+      MONGODB_URI: 'mongodb://mongo:27017'
+      MONGODB_DATABASE: 'sorry-cypress'
+
+      SCREENSHOTS_DRIVER: '../screenshots/minio.driver'
+      MINIO_ACCESS_KEY: ${MINIO_ACCESS_KEY}
+      MINIO_SECRET_KEY: ${MINIO_SECRET_KEY}
+      MINIO_ENDPOINT: '${SERVER_IP}'
+      MINIO_URL: 'http://${SERVER_IP}'
+      MINIO_PORT: '9000'
+      MINIO_USESSL: 'false'
+      MINIO_BUCKET: sorry-cypress
+
+      ALLOWED_KEYS: ${ALLOWED_KEYS}
+
+      REDIS_URI: 'redis://redis:6379'
+    ports:
+      - 1234:1234
+    depends_on:
+      - mongo
+      - storage
+      - redis
+    networks:
+      - sorrynet
+
+  api:
+    image: agoldis/sorry-cypress-api:latest
+    environment:
+      MONGODB_URI: 'mongodb://mongo:27017'
+      MONGODB_DATABASE: 'sorry-cypress'
+    ports:
+      - 4000:4000
+    depends_on:
+      - mongo
+    networks:
+      - sorrynet
+
+  dashboard:
+    image: agoldis/sorry-cypress-dashboard:latest
+    environment:
+      GRAPHQL_SCHEMA_URL: http://${SERVER_IP}:4000
+      GRAPHQL_CLIENT_CREDENTIALS: ''
+      PORT: ${FRONT_PORT}
+      CI_URL: ''
+    ports:
+      - ${FRONT_PORT}
+    depends_on:
+      - mongo
+      - api
+    networks:
+      - sorrynet
+
+  authproxy:
+    image: quay.io/dtan4/nginx-basic-auth-proxy:latest
+    ports:
+      - ${FRONT_PORT}:80
+      - 8090:8090
+    environment:
+      - BASIC_AUTH_USERNAME=${BASIC_AUTH_USERNAME}
+      - BASIC_AUTH_PASSWORD=${BASIC_AUTH_PASSWORD}
+      - PROXY_PASS=http://dashboard:${FRONT_PORT}/
+    depends_on:
+      - dashboard
+    networks:
+      - sorrynet
+
+  storage:
+    image: minio/minio
+    hostname: 'storage'
+    environment:
+      MINIO_ACCESS_KEY: ${MINIO_ACCESS_KEY}
+      MINIO_SECRET_KEY: ${MINIO_SECRET_KEY}
+    volumes:
+      - ./data/data-minio-cypress:/data
+    command: server /data
+    ports:
+      - 9000:9000
+    networks:
+      - sorrynet
+
+  createbuckets:
+    image: minio/mc
+    depends_on:
+      - storage
+    volumes:
+      - ./data/createbuckets:/data
+    entrypoint: >
+      /bin/sh -c "
+      sleep 3;
+      if [ ! -f /data/bucket_created ]; then
+        /usr/bin/mc config host add myminio http://storage:9000 MW32h3gd6HvjBEgTRx t6NgQWUcEyG2AzaDCVkN6sbWcvDCVkN6sGiZ7;
+        /usr/bin/mc rm -r --dangerous --force myminio/sorry-cypress;
+        /usr/bin/mc mb myminio/sorry-cypress;
+        /usr/bin/mc policy set download myminio/sorry-cypress;
+        /usr/bin/mc policy set public myminio/sorry-cypress;
+        touch /data/bucket_created;
+      else
+        echo 'Container initialized';
+      fi;
+      exit 0;
+      "
+    networks:
+      - sorrynet
+
+networks:
+  vrtnet:
+    driver: bridge
+  sorrynet:
+    driver: bridge

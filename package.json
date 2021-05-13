@@ -1,0 +1,19 @@
+{
+  "name": "vrt-poc",
+  "version": "1.0.0",
+  "description": "PoC of using VRT integrated with Cypress.io and sorry-cypress",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "open": "./node_modules/.bin/cypress open"
+  },
+  "author": "Francisco Fuentes Barrera",
+  "license": "ISC",
+  "devDependencies": {
+    "@visual-regression-tracker/agent-cypress": "^4.8.1",
+    "cy2": "^1.0.4",
+    "cypress": "^7.3.0",
+    "typescript": "^4.2.4",
+    "webpack": "^4.46.0"
+  }
+}
