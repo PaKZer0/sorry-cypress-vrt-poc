@@ -1,6 +1,6 @@
 {
   "projectId": "Sorry VRT Cypress",
-  "baseUrl": "https://www.emergyadigital.com/"
+  "baseUrl": "https://www.emergyadigital.com/",
 
   "integrationFolder": "./src/cypress/integration",
   "fileServerFolder": "./src",
