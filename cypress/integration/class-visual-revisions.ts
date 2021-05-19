@@ -40,11 +40,6 @@ export abstract class VRTTest{
         cy.clearCookies();
         cy.clearLocalStorage();
         cy.reload();
-        const dispatcherUrl = Cypress.env('dispatcher_url');
-
-        if (dispatcherUrl) {
-          cy.setDispatcherInfo(dispatcherUrl);
-        }
       });
 
       context('Performs visual tracking of pages and components', () => {
@@ -63,7 +58,6 @@ export abstract class VRTTest{
             this.removeStickers();
             cy.wait(1000);
 
-            let mode_str = 'whole page';
             let scroll_options = {
               duration: 500,
               ensureScrollable: false
@@ -88,9 +82,9 @@ export abstract class VRTTest{
                   cy.scrollTo('bottom', scroll_options)
                     .scrollTo('center', scroll_options)
                     .scrollTo('top', scroll_options).then(() =>{
-                    cy.vrtTrack($title + ": desktop", mode_str, { viewport: "1920x1080", device: "desktop"});
+                    cy.vrtTrack($title + ": desktop", { device: "desktop" });
                   });
-                  //cy.vrtTrack($title + ": desktop", mode_str, { viewport: "1920x1080", device: "desktop"});
+                  //cy.vrtTrack($title + ": desktop", { device: "desktop" });
                 });
 
                 // mobile
@@ -99,9 +93,9 @@ export abstract class VRTTest{
                   cy.scrollTo('bottom', scroll_options)
                     .scrollTo('center', scroll_options)
                     .scrollTo('top', scroll_options).then(() =>{
-                    cy.vrtTrack($title + ": mobile", mode_str, { viewport: "375x667", device: "mobile"});
+                    cy.vrtTrack($title + ": mobile", { device: "mobile" });
                   });
-                  //cy.vrtTrack($title + ": mobile", mode_str, { viewport: "375x667", device: "mobile"});
+                  //cy.vrtTrack($title + ": mobile", { device: "mobile" });
                 });
               });
 
@@ -111,12 +105,12 @@ export abstract class VRTTest{
                 cy.get(selector).then(($section) => {
                   // desktop
                   cy.viewport(1920, 1080).then(() => {
-                    cy.get(selector).vrtTrack(selector + ": desktop", mode_str, { viewport: "1920x1080", device: "desktop" });
+                    cy.get(selector).vrtTrack(selector + ": desktop", { device: "desktop" });
                   });
 
                   // mobile
                   cy.viewport(375, 667).then(() => {
-                    cy.get(selector).vrtTrack(selector + ": mobile", mode_str, { viewport: "375x667", device: "mobile"  });
+                    cy.get(selector).vrtTrack(selector + ": mobile", { device: "mobile"  });
                   });
                 });
               });

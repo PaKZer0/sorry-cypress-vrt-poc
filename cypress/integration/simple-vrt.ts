@@ -27,15 +27,15 @@ describe('Simple VRT test', () => {
       // desktop
       cy.viewport(1920, 1080).then(() => {
         cy.wait(1000);
-        cy.vrtTrack($title + ": desktop", mode_str, { viewport: "1920x1080", device: "desktop"});
-        cy.get(selector).vrtTrack(selector + ": desktop", mode_str, { viewport: "1920x1080", device: "desktop" });
+        cy.vrtTrack($title + ": desktop", { device: "desktop"});
+        cy.get(selector).vrtTrack(selector + ": desktop", { device: "desktop" });
       });
 
       // mobile
       cy.viewport(375, 667).then(() => {
         cy.wait(1000);
-        cy.vrtTrack($title + ": mobile", mode_str, { viewport: "375x667", device: "mobile"});
-        cy.get(selector).vrtTrack(selector + ": mobile", mode_str, { viewport: "375x667", device: "mobile"  });
+        cy.vrtTrack($title + ": mobile", { device: "mobile"});
+        cy.get(selector).vrtTrack(selector + ": mobile", { device: "mobile"  });
       });
     });
   })
