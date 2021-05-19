@@ -45,12 +45,7 @@ export abstract class VRTTest{
       context('Performs visual tracking of pages and components', () => {
         it('Captures desktop and mobile versions of the urls', () => {
           this.urls.forEach(page => {
-            cy.visit(page.url, {
-              headers: {
-                "Accept-Encoding": "gzip, deflate",
-                Connection: "Keep-Alive",
-              }
-            });
+            cy.visit(page.url);
 
             // this per site functon removes sticky elements and makes the header
             // stay on the top of the page instead following the scroll
