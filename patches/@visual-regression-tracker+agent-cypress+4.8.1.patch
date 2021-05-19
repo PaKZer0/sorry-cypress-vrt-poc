@@ -1,0 +1,13 @@
+diff --git a/node_modules/@visual-regression-tracker/agent-cypress/dist/plugin.js b/node_modules/@visual-regression-tracker/agent-cypress/dist/plugin.js
+index b70d89e..ab4f0b5 100644
+--- a/node_modules/@visual-regression-tracker/agent-cypress/dist/plugin.js
++++ b/node_modules/@visual-regression-tracker/agent-cypress/dist/plugin.js
+@@ -50,7 +50,7 @@ function addVisualRegressionTrackerPlugin(on, config) {
+             var imagePath = props.imagePath;
+             var buffer = fs_1.readFileSync(imagePath);
+             var imageBase64 = buffer.toString("base64");
+-            fs_1.unlinkSync(imagePath);
++            //fs_1.unlinkSync(imagePath);
+             return imageBase64;
+         },
+         _a["VRT_START"] = function (props) { return __awaiter(_this, void 0, void 0, function () {
