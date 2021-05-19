@@ -1,4 +1,28 @@
 {
   "projectId": "Sorry VRT Cypress",
   "baseUrl": "https://www.emergyadigital.com/"
+
+  "integrationFolder": "./cypress/integration",
+  "fileServerFolder": "./",
+  "env": {
+    "browserPermissions": {
+      "notifications": "allow",
+      "geolocation": "allow",
+      "location": "allow",
+      "images": "allow",
+      "javascript": "allow",
+      "popups": "allow",
+      "plugins": "allow",
+      "cookies": "allow"
+    }
+  },
+  "integrationFolder": "cypress/integration",
+  "fileServerFolder": "./",
+  "supportFile": "cypress/support/index.ts",
+  "downloadsFolder": "cypress/downloads",
+  "fixturesFolder": "cypress/fixtures",
+  "pluginsFile": "cypress/plugins",
+  "screenshotsFolder": "cypress/screenshots",
+  "videosFolder": "cypress/videos",
+  "trashAssetsBeforeRuns": true
 }
