@@ -9,3 +9,6 @@ migration-logs:
 
 removedata:
 	sudo rm -fR imageUploads/ db/ data/
+
+simple-vrt:
+	npx cypress run --spec src/cypress/integration/simple-vrt.ts
