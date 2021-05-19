@@ -2,6 +2,6 @@
   "apiUrl": "http://localhost:4200",
   "project": "Default project",
   "apiKey": "REPLACEWITHAPIKEY",
-  "branchName": "develop",
+  "branchName": "master",
   "enableSoftAssert": true
 }
