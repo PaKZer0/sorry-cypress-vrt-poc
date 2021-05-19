@@ -5,7 +5,7 @@ stop:
 	docker-compose down
 
 migration-logs:
-	docker logs vrtpoc_migration_1
+	docker-compose logs migration
 
 removedata:
 	sudo rm -fR imageUploads/ db/ data/
