@@ -84,9 +84,9 @@ services:
       MONGODB_DATABASE: 'sorry-cypress'
 
       SCREENSHOTS_DRIVER: '../screenshots/minio.driver'
-      MINIO_ACCESS_KEY: ${MINIO_ACCESS_KEY}
-      MINIO_SECRET_KEY: ${MINIO_SECRET_KEY}
-      MINIO_ENDPOINT: '${SERVER_IP}'
+      MINIO_ACCESS_KEY: '${MINIO_ACCESS_KEY}'
+      MINIO_SECRET_KEY: '${MINIO_SECRET_KEY}'
+      MINIO_ENDPOINT: '${MINIO_ENDPOINT}'
       MINIO_URL: 'http://${SERVER_IP}'
       MINIO_PORT: '9000'
       MINIO_USESSL: 'false'
