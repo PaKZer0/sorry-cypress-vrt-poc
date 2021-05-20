@@ -87,8 +87,8 @@ services:
       MINIO_ACCESS_KEY: '${MINIO_ACCESS_KEY}'
       MINIO_SECRET_KEY: '${MINIO_SECRET_KEY}'
       MINIO_ENDPOINT: '${MINIO_ENDPOINT}'
-      MINIO_URL: '${MINIO_URL}'
-      MINIO_PORT: '9000'
+      MINIO_URL: ${MINIO_URL}
+      MINIO_PORT: 9000
       MINIO_USESSL: 'false'
       MINIO_BUCKET: sorry-cypress
 
