@@ -20,4 +20,4 @@ sorry-simple-vrt:
 	./simple_vrt.sh true `cat /proc/sys/kernel/random/uuid` src/cypress/integration/simple-vrt.ts
 
 sorry-group-vrt:
-	./simple_vrt.sh false ${id} src/cypress/integration/**/*
+	./simple_vrt.sh false ${id} src/cypress/integration/ed/**/*
