@@ -4,6 +4,9 @@ start:
 stop:
 	docker-compose down
 
+restart:
+	docker-compose restart
+
 migration-logs:
 	docker-compose logs migration
 
