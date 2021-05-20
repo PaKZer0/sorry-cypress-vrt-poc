@@ -7,6 +7,12 @@ stop:
 restart:
 	docker-compose restart
 
+install:
+	npm install
+
+build:
+	npm run build
+
 migration-logs:
 	docker-compose logs migration
 
