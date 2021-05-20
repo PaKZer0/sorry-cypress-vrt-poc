@@ -17,14 +17,16 @@ export class VRTUrl{
   }
 }
 
-export abstract class VRTTest{
+export class VRTTest{
   urls: VRTUrl[];
 
   constructor(urls: VRTUrl[]){
     this.urls = urls;
   }
 
-  abstract removeStickers(): void;
+  removeStickers(): void{
+    // override with something ellaborated on subclasses
+  }
 
   getTest() {
     return describe('Performs a visual testing over a whole page or component', () => {
