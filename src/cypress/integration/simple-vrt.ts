@@ -11,8 +11,6 @@ describe('Simple VRT test', () => {
     cy.visit('/')
 
     cy.title().then(($title) => {
-      let mode_str = 'whole page';
-      //let selector = ".slick-track";
       let selector = ".address:nth-child(2)";
 
       // remove sticky header and gliders
